@@ -190,45 +190,34 @@ const s3 = p => {
   let x = 100;
   let y = 100;
 
-let noise;
-let fft;
-let filter, filterFreq, filterWidth;
+let fingers;
 
 p.setup = function() {
-  p.createCanvas(710, 256);
+  p.createCanvas(window.innerWidth, window.innerHeight);
   p.fill(255);
 
-  filter = new p5.BandPass();
-
-  noise = new p5.Noise();
-
-  noise.disconnect(); // Disconnect soundfile from master output...
-  filter.process(noise); // ...and connect to filter so we'll only hear BandPass.
-  noise.start();
-
-  fft = new p5.FFT();
+  fingers = createVideo(['https://raw.githubusercontent.com/Avxy/Aion/gh-pages/videos/tree.avi']);
+  fingers.hide(); // by default video shows up in separate dom
+  // element. hide it and draw it to the canvas
+  // instead
+  
+  
 }
 
 p.draw = function() {
   p.background(0,108,144);
 
-  // Map mouseX to a bandpass freq from the FFT spectrum range: 10Hz - 22050Hz
-  filterFreq = p.map(p.mouseX, 0, p.width, 10, 22050);
-  // Map mouseY to resonance/width
-  filterWidth = p.map(p.mouseY, 0, p.height, 0, 90);
-  // set filter parameters
-  filter.set(filterFreq, filterWidth);
+    background(150);
+  image(fingers, 10, 10); // draw the video frame to canvas
+  filter(GRAY);
+  image(fingers, 150, 150); // draw a second copy to canvas
+  
 
-  // Draw every value in the FFT spectrum analysis where
-  // x = lowest (10Hz) to highest (22050Hz) frequencies,
-  // h = energy / amplitude at that frequency
-  let spectrum = fft.analyze();
-  p.noStroke();
-  for (let i = 0; i < spectrum.length; i++) {
-    let x = p.map(i, 0, spectrum.length, 0, p.width);
-    let h = -p.height + p.map(spectrum[i], 0, 255, p.height, 0);
-    p.rect(x, p.height, p.width / spectrum.length, h);
-  }
+}
+  
+  
+  p.mousePressed = function() {
+  fingers.loop(); // set the video to loop and start playing
 }
   
     }
