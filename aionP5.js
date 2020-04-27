@@ -8,6 +8,17 @@ const particles = [];
 
 let img1;
    
+//mouse//
+let bx;
+let by;
+let boxSize = 75;
+let overBox = false;
+let locked = false;
+let xOffset = 0.0;
+let yOffset = 0.0;
+//mouse//
+   
+   
 
 p.setup = function() {
   p.createCanvas(window.innerWidth, window.innerHeight);
@@ -22,6 +33,17 @@ p.setup = function() {
   for(let i=0; i<particlesLength; i++) {
     particles.push(new Particle());
   }
+  
+//mouse//
+  bx = p.width / 2.0;
+  by = p.height / 2.0;
+  p.rectMode(p.RADIUS);
+  p.strokeWeight(2);
+//mouse//  
+  
+  
+  
+  
 }
 
 p.draw = function () {
@@ -44,6 +66,35 @@ p.draw = function () {
     particle.draw();
     particle.checkParticles(particles.slice(idx));
   });
+  
+//mouse//
+
+  if (
+    p.mouseX > bx - boxSize &&
+    p.mouseX < bx + boxSize &&
+    p.mouseY > by - boxSize &&
+    p.mouseY < by + boxSize
+  ) {
+    overBox = true;
+    if (!locked) {
+      p.stroke(255);
+      p.fill(244, 122, 158);
+    }
+  } else {
+    p.stroke(156, 39, 176);
+    p.fill(244, 122, 158);
+    overBox = false;
+  }
+
+  // Draw the box
+  p.rect(bx, by, boxSize, boxSize);
+  
+//mouse/////  
+  
+  
+  
+  
+  
 }
 
 class Particle {
@@ -106,6 +157,34 @@ const social_panel_container = document.querySelector('.social-panel-container')
 //close_btn.addEventListener('click', () => {
 //  social_panel_container.classList.remove('visible')
 //});
+  
+  
+//mouse//
+
+function mousePressed() {
+  if (overBox) {
+    locked = true;
+    fill(255, 255, 255);
+  } else {
+    locked = false;
+  }
+  xOffset = mouseX - bx;
+  yOffset = mouseY - by;
+}
+
+function mouseDragged() {
+  if (locked) {
+    bx = mouseX - xOffset;
+    by = mouseY - yOffset;
+  }
+}
+
+function mouseReleased() {
+  locked = false;
+}
+
+//mouse//
+  
   
   
 }
@@ -186,17 +265,21 @@ new p5(s2); // invoke p5
 
 
 
+
+
+let fingers;
+
 const s3 = p => {
   let x = 100;
   let y = 100;
 
-let fingers;
+
 
 p.setup = function() {
-  p.createCanvas(window.innerWidth, window.innerHeight);
-  p.fill(255);
+  p.createCanvas(p.windowWidth, p.windowHeight);
 
-  fingers = createVideo(['https://raw.githubusercontent.com/Avxy/Aion/gh-pages/videos/tree.avi']);
+
+  fingers = p.createVideo(['https://github.com/Avxy/Aion/blob/gh-pages/videos/Tree.avi']);
   fingers.hide(); // by default video shows up in separate dom
   // element. hide it and draw it to the canvas
   // instead
@@ -207,10 +290,10 @@ p.setup = function() {
 p.draw = function() {
   p.background(0,108,144);
 
-    background(150);
-  image(fingers, 10, 10); // draw the video frame to canvas
-  filter(GRAY);
-  image(fingers, 150, 150); // draw a second copy to canvas
+    p.background(150);
+  p.image(fingers, 10, 10); // draw the video frame to canvas
+  p.filter(p.GRAY);
+  p.image(fingers, 150, 150); // draw a second copy to canvas
   
 
 }
