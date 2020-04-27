@@ -11,7 +11,7 @@ let img1;
 //mouse//
 let bx;
 let by;
-let boxSize = 75;
+let boxSize = 55;
 let overBox = false;
 let locked = false;
 let xOffset = 0.0;
@@ -67,8 +67,8 @@ p.draw = function () {
     particle.checkParticles(particles.slice(idx));
   });
   
+  
 //mouse//
-
   if (
     p.mouseX > bx - boxSize &&
     p.mouseX < bx + boxSize &&
@@ -78,17 +78,20 @@ p.draw = function () {
     overBox = true;
     if (!locked) {
       p.stroke(255);
-      p.fill(244, 122, 158);
+      p.fill(0, 108, 144);
     }
   } else {
-    p.stroke(156, 39, 176);
-    p.fill(244, 122, 158);
+    p.stroke(144);
+    p.fill(0, 144, 199);
     overBox = false;
   }
 
   // Draw the box
+  p.push();
+//  p.translate(p.width / 2, p.height / 2);
+ // p.rotate(p.PI);
   p.rect(bx, by, boxSize, boxSize);
-  
+  p.pop();
 //mouse/////  
   
   
@@ -160,26 +163,30 @@ const social_panel_container = document.querySelector('.social-panel-container')
   
   
 //mouse//
-
-function mousePressed() {
+p.mousePressed = function() {
   if (overBox) {
     locked = true;
-    fill(255, 255, 255);
+    p.fill(255, 255, 255);
+    
   } else {
     locked = false;
   }
-  xOffset = mouseX - bx;
-  yOffset = mouseY - by;
+  xOffset = p.mouseX - bx;
+  yOffset = p.mouseY - by;
+}
+p.mouseClicked = function()
+{
+window.open("https://avxy.github.io/Beeats/");
 }
 
-function mouseDragged() {
+p.mouseDragged = function() {
   if (locked) {
-    bx = mouseX - xOffset;
-    by = mouseY - yOffset;
+    bx = p.mouseX - xOffset;
+    by = p.mouseY - yOffset;
   }
 }
 
-function mouseReleased() {
+p.mouseReleased = function() {
   locked = false;
 }
 
@@ -262,27 +269,28 @@ function branch(len) {
   }
 new p5(s2); // invoke p5  
 
+//https://github.com/Avxy/Aion/blob/gh-pages/videos/Tree.avi
 
 
 
 
 
-let fingers;
 
 const s3 = p => {
   let x = 100;
   let y = 100;
 
-
+let playing = false;
+let fingers;
+let button;
 
 p.setup = function() {
   p.createCanvas(p.windowWidth, p.windowHeight);
 
 
-  fingers = p.createVideo(['https://github.com/Avxy/Aion/blob/gh-pages/videos/Tree.avi']);
-  fingers.hide(); // by default video shows up in separate dom
-  // element. hide it and draw it to the canvas
-  // instead
+  fingers = p.createVideo(['https://www.dropbox.com/s/lp1jave360lhcl4/Tree.avi?dl=0']);
+  button = p.createButton('play');
+  button.mousePressed(p.toggleVid); // attach button listeners
   
   
 }
@@ -290,17 +298,21 @@ p.setup = function() {
 p.draw = function() {
   p.background(0,108,144);
 
-    p.background(150);
-  p.image(fingers, 10, 10); // draw the video frame to canvas
-  p.filter(p.GRAY);
-  p.image(fingers, 150, 150); // draw a second copy to canvas
+
   
 
 }
   
   
-  p.mousePressed = function() {
-  fingers.loop(); // set the video to loop and start playing
+p.toggleVid = function() {
+  if (playing) {
+    fingers.pause();
+    button.html('play');
+  } else {
+    fingers.loop();
+    button.html('pause');
+  }
+  playing = !playing;
 }
   
     }
