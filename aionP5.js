@@ -36,7 +36,7 @@ p.setup = function() {
   
 //mouse//
   bx = p.width / 2.0;
-  by = p.height / 2.0;
+  by = p.height / 8.0;
   p.rectMode(p.RADIUS);
   p.strokeWeight(2);
 //mouse//  
@@ -91,6 +91,10 @@ p.draw = function () {
 //  p.translate(p.width / 2, p.height / 2);
  // p.rotate(p.PI);
   p.rect(bx, by, boxSize, boxSize);
+  p.textSize(32);
+  p.textAlign(p.CENTER, p.CENTER);
+  p.fill(255);
+  p.text('Beeats', bx, by);
   p.pop();
 //mouse/////  
   
